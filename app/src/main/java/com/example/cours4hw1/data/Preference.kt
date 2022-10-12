@@ -10,12 +10,6 @@ class Preference (context:Context) {
         preference=context.getSharedPreferences("simple_data", MODE_PRIVATE)
     }
 
-    fun setName(name: String){
-        preference.edit().putString("pref_name",name).apply()
-    }
-
-    fun getName():String=preference.getString("pref_name","").toString()
-
     fun getIsShowBoarding():Boolean{
         return preference.getBoolean("is_show",false)
     }
@@ -27,5 +21,16 @@ class Preference (context:Context) {
     }
     fun getProfileImage():String=preference.getString("profile_image","").toString()
 
+    fun setName(name: String){
+        preference.edit().putString("profile_name",name).apply()
+    }
+
+    fun getName():String=preference.getString("profile_name","").toString()
+
+    fun setAge(age: String){
+        preference.edit().putString("profile_age",age).apply()
+    }
+
+    fun getAge():String=preference.getString("profile_age","").toString()
 
 }

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cours4hw1.OnBoard
+import com.example.cours4hw1.R
 import com.example.cours4hw1.databinding.ItemOnBoardingPageBinding
 import com.example.cours4hw1.loadImage
 
@@ -16,20 +17,20 @@ class OnBoardAdapter (private val onClick:()->Unit) : RecyclerView.Adapter <OnBo
     init {
         arrayListBoarding.add(
             OnBoard(
-                "https://www.shareicon.net/data/128x128/2016/07/09/118185_monitor_512x512.png",
-                "Text 1",
-                "Description 1")
+                R.raw.task_one,
+                "hi_user",
+                "welcom to my app ;)")
         )
         arrayListBoarding.add(
             OnBoard(
-            "https://www.shareicon.net/data/128x128/2016/07/09/118185_monitor_512x512.png",
-            "Text 2",
+                R.raw.task_2,
+            "any text",
             "Description 2")
            )
         arrayListBoarding.add(
             OnBoard(
-                "https://www.shareicon.net/data/128x128/2016/07/09/118185_monitor_512x512.png",
-                "Text 3",
+                R.raw.task_3,
+                "any text 3",
                 "Description 3")
         )
     }
@@ -57,7 +58,8 @@ class OnBoardAdapter (private val onClick:()->Unit) : RecyclerView.Adapter <OnBo
 
                 binding.tvTitle.text=onBoard.title
                 binding.tvDesc.text=onBoard.description
-                binding.imagePager.loadImage(onBoard.image)
+                onBoard.animation?.let { binding.animationView.setAnimation(it) }
+              //  binding.imagePager.loadImage(onBoard.image)
             }
 
     }

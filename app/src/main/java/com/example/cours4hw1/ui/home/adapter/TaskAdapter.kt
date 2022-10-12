@@ -1,18 +1,35 @@
 package com.example.cours4hw1.ui.home.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cours4hw1.R
 import com.example.cours4hw1.databinding.ItemTaskBinding
 import com.example.cours4hw1.ui.Task
 
-class TaskAdapter: RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
+class TaskAdapter(
+    private val context: Context,
+    private val onLongClick:(Int)->Unit,
+    private val onClick:(Int)->Unit):
+    RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     private val data= arrayListOf<Task>()
 
     fun addTask(task: Task){
         data.add(0,task)
         notifyItemChanged(0)
+    }
+
+    fun addTasks(list:List<Task>){
+        data.clear()
+        data.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    fun getTask(position: Int):Task{
+        return data[position]
     }
 
 
@@ -32,9 +49,22 @@ class TaskAdapter: RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     inner class TaskViewHolder(private val binding: ItemTaskBinding):
         RecyclerView.ViewHolder(binding.root) {
         fun bind(task: Task) {
+            if (adapterPosition % 2 == 0){
+                itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.black))
+                binding.tvTitle.setTextColor(ContextCompat.getColor(context,R.color.white))
+                binding.tvDescription.setTextColor(ContextCompat.getColor(context,R.color.white))
+            } else {
+                itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
+                binding.tvTitle.setTextColor(ContextCompat.getColor(context, R.color.black))
+                binding.tvDescription.setTextColor(ContextCompat.getColor(context, R.color.black))
+            }
             binding.tvDescription.text=task.descriptor
             binding.tvTitle.text=task.title
-
+            itemView.setOnLongClickListener {
+                onLongClick(adapterPosition)
+                false
+            }
+         itemView.setOnClickListener { onClick(adapterPosition) }
         }
     }
 }

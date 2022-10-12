@@ -8,11 +8,15 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
+import com.example.cours4hw1.App
+import com.example.cours4hw1.R
 import com.example.cours4hw1.databinding.FragmentTaskBinding
 import com.example.cours4hw1.ui.Task
 
 class TaskFragment : Fragment() {
     private lateinit var binding: FragmentTaskBinding
+
+    private var task:Task?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,19 +29,43 @@ class TaskFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (arguments!=null){
+            binding.btbSave.text=getString(R.string.update)
+            task = arguments?.getSerializable("k_task") as Task
+            binding.etTitle.setText(task?.title)
+            binding.etDescription.setText(task?.descriptor)
+        }else{
+            binding.btbSave.text=getString(R.string.save)
+        }
+
+
         binding.btbSave.setOnClickListener{
-            setFragmentResult(
-                FRAGMENT_RESULT,
-            bundleOf(
-                TASK_KEY to Task(
-                binding.etTitle.text.toString(),
-                binding.etDescription.text.toString()
-                   )
-                )
-            )
-            findNavController().navigateUp()
+            if (arguments!=null){
+                task?.let { it1 -> update(it1) }
+            } else{
+                save()
+            }
         }
     }
+
+    private fun update(task: Task){
+        task.title=binding.etTitle.text.toString()
+        task.descriptor=binding.etDescription.text.toString()
+        App.db.dao().update(task)
+        findNavController().navigateUp()
+    }
+
+    private fun save(){
+        App.db.dao().insert(
+            Task(
+                title = binding.etTitle.text.toString(),
+                descriptor = binding.etDescription.text.toString()
+            )
+        )
+
+        findNavController().navigateUp()
+    }
+
     companion object{
     const val FRAGMENT_RESULT ="tf_result"
         const val TASK_KEY="task.key"
